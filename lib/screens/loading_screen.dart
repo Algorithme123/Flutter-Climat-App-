@@ -1,18 +1,33 @@
+import 'package:climat/screens/location_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../services/weather.dart';
+
 class LoadingScreen extends StatefulWidget {
   @override
-  _LoadingScreenState createState() => _LoadingScreenState();
+  State<StatefulWidget> createState() {
+    return _LoadingScreenState();
+  }
 }
-
 class _LoadingScreenState extends State<LoadingScreen> {
-
+  @override
+  void initState() {
+    super.initState();
+    geolocation();
+  }
 
 
   void geolocation() async{
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    print(position);
+    var weatherData = await WeatherModel().getLocationWeather();
+    // Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    // print(position);
+    Navigator.push(context, MaterialPageRoute(builder: (context){
+      return LocationScreen(
+        locationWeather : weatherData,
+      );
+
+    }));
   }
 
 
@@ -21,14 +36,15 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: TextButton(
-          onPressed: () {
-            //Get the current location
-            this.geolocation();
-          },
-          child: Text('Get Location'),
-        ),
+        child: SpinKitDoubleBounce(
+          color: Colors.white,
+          size: 100.0,
+
+        )
       ),
     );
   }
+}
+
+SpinKitDoubleBounce({required Color color, required double size}) {
 }
